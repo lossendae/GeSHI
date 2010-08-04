@@ -1,0 +1,172 @@
+pre{	white-space: pre-wrap; }
+.php, .css, .html4strict {
+	font-family:'Courier New',Courier,monospace;
+	font-size:110%;
+	line-height:110%;
+	margin:20px;
+	padding:0;
+	word-wrap: break-word;
+	overflow:hidden;
+	color:#464646;
+}
+
+.php ol li, .css ol li, .html4strict ol li{
+	border-left:2px solid #435A5F;
+	padding-left:10px;
+}
+.php a:link {
+color:#000066;
+}
+.php a:hover {
+background-color:#303030;
+}
+.php .head {
+background-color:#F0F0FF;
+border-bottom:1px solid #D0D0D0;
+color:#808080;
+font-family:Verdana,Arial,sans-serif;
+font-size:70%;
+font-weight:bold;
+padding:2px;
+}
+.php .foot {
+background-color:#F0F0FF;
+border-top:1px solid #D0D0D0;
+color:#808080;
+font-family:Verdana,Arial,sans-serif;
+font-size:70%;
+font-weight:bold;
+padding:2px;
+}
+.php .imp {
+color:red;
+font-weight:bold;
+}
+.php .kw1 {
+color:#5BA1CF;
+}
+.php .kw2 {
+color:#5BA1CF;
+font-weight:bold;
+}
+.php .kw3 {
+color:#5BA1CF;
+}
+.php .kw4 {
+color:#009900;
+font-weight:bold;
+}
+.php .co1 {
+color:#7A7F77;
+font-style:normal;
+}
+.php .co2 {
+color:#666666;
+font-style:italic;
+}
+.php .co3 {
+color:#0000CC;
+font-style:italic;
+}
+.php .co4 {
+color:#878A85;
+font-style:italic;
+}
+.php .coMULTI {
+color:#666666;
+font-style:normal;
+}
+.php .es0 {
+color:#000099;
+font-weight:normal;
+}
+.php .es1 {
+color:#000099;
+font-weight:bold;
+}
+.php .es2 {
+color:#660099;
+font-weight:bold;
+}
+.php .es3 {
+color:#660099;
+font-weight:bold;
+}
+.php .es4 {
+color:#006699;
+font-weight:bold;
+}
+.php .es5 {
+color:#006699;
+font-style:italic;
+font-weight:bold;
+}
+.php .es6 {
+color:#009933;
+font-weight:bold;
+}
+.php .es_h {
+color:#000099;
+font-weight:bold;
+}
+.php .br0 {
+color:#B9BDB6;
+}
+.php .sy0 {
+color:#B9BDB6;
+}
+.php .sy1 {
+color:#000000;
+font-weight:bold;
+}
+.php .st0 {
+color:#dedede;
+}
+.php .st_h {
+color:#5CE638;
+}
+.php .nu0 {
+color:#CC66CC;
+}
+.php .nu8 {
+color:#208080;
+}
+.php .nu12 {
+color:#208080;
+}
+.php .nu19 {
+color:#800080;
+}
+.php .me1 {
+color:#C8CFC2;
+}
+.php .me2 {
+color:#004000;
+}
+.php .me {
+}
+.php .re0 {
+color:#FFAA3E;
+}
+.php span.xtra {
+display:block;
+}
+
+.html4strict{
+	background-color:#fafafa;
+}
+
+.html4strict .kw3{
+	color:#FF1F1F;
+}
+
+.html4strict .kw2{
+	color: #1B50DF;
+}
+
+.html4strict .sc2{
+	color:#1B50DF;
+}
+.html4strict .st0{
+	color:#D253DF;
+}
