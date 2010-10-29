@@ -43,6 +43,8 @@ class GeshiLoader {
 			'lib_path' => $corePath.'lib/',
 			'assets_path' => $assetsPath,
 			'assets_url' => $assetsUrl,
+			
+			'enable_line_numbers' => true,
 		),$config);
 	}
 	
@@ -72,8 +74,9 @@ class GeshiLoader {
 		}	
 		
 		$language = $this->_language;
+		
 		if(empty($language)){
-			$language = 'php';
+			$language = 'html4strict';			
 		}
 		
 		//Fix for html highlighting
@@ -88,14 +91,18 @@ class GeshiLoader {
 		$content = str_replace(']]','&#93;&#93;', $content);
 		
 		$geshi = new GeSHi(trim($content), $language);	
-		$geshi->enable_classes();		
+		$geshi->enable_classes();
+
+		$lineNumbers = $this->config['enable_line_numbers'];
+		$geshi->enable_line_numbers($lineNumbers);
 		
 		$string = $geshi->parse_code();
 		
 		//Fix MODx tags after parsing
 		$string = str_replace('&amp;#91;','&#91;', $string);
 		$string = str_replace('&amp;#93;','&#93;', $string);
-	
+		$string = str_replace('&amp;quot;','&quot;', $string);
+		
 		return $string;
 	}
 	
@@ -108,9 +115,7 @@ class GeshiLoader {
      */
 	public function setLanguage($matches)
 	{
-		$this->_language = $matches[1];
-		echo $matches[1];
-		
+		$this->_language = $matches[1];		
 		$match = array(1 => $matches[2]);
 	
 		return $this->parse($match);

@@ -29,22 +29,10 @@ if (!($geshiLoader instanceof GeshiLoader)) return 'GeshiLoader could not be loa
 $e = $modx->event;
 
 switch ($e->name) 
-{
+{		
 	case 'OnLoadWebDocument': 		
 	
-		$geshiLoader->loadSettings();		
-		
-		$output = $modx->resource->get('content');
-		
-		if(preg_match("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", $output)){
-			$output = preg_replace_callback("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", array(&$geshiLoader,'setLanguage'), $output);
-		}
-		 
-		if(preg_match("/<pre>(.*)<\/pre>/Uis", $output)){
-			$output = preg_replace_callback("/<pre>(.*)<\/pre>/Uis", array(&$geshiLoader,'parse'), $output);
-		}
-		
-		$modx->resource->set('content',$output);
+		$geshiLoader->loadSettings();				
 		
 	break;		
 	case 'OnDiscussPostFetchContent': 
