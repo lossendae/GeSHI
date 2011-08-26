@@ -30,25 +30,46 @@ $e = $modx->event;
 
 switch ($e->name) 
 {		
-	case 'OnLoadWebDocument': 		
-	
-		$geshiLoader->loadSettings();				
+	case 'OnLoadWebDocument': 
+		$is_cacheable = $modx->resource->get('cacheable');
+		$id = $modx->resource->get('id');
+		$cacheKey = $modx->context->get('key') . "/resources/{$id}";
 		
-	break;		
-	case 'OnDiscussPostFetchContent': 
-	
-		$output = $e->params['content'];
+		/* This might be not the best way performance wise but it's the only one that works each time */
+		$cachedResource = $modx->cacheManager->get($cacheKey, array(
+			xPDO::OPT_CACHE_KEY => $modx->getOption('cache_resource_key', null, 'resource'),
+			xPDO::OPT_CACHE_HANDLER => $modx->getOption('cache_resource_handler', null, $modx->getOption(xPDO::OPT_CACHE_HANDLER)),
+			xPDO::OPT_CACHE_FORMAT => (integer) $modx->getOption('cache_resource_format', null, $modx->getOption(xPDO::OPT_CACHE_FORMAT, null, xPDOCacheManager::CACHE_PHP)),
+		));
 		
-		if(preg_match("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", $output)){
-			$output = preg_replace_callback("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", array(&$geshiLoader,'setLanguage'), $output);
-		}
+		/* Only parse if the document is not cacheable, or cacheable but not yet cached ( feature request ? ) */
+		if($is_cacheable && !is_array($cachedResource) || !$is_cacheable){
+			$output = $modx->resource->get('content');
+
+			if(preg_match("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", $output)){
+				$output = preg_replace_callback("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", array(&$geshiLoader,'setLanguage'), $output);
+			}
+
+			if(preg_match("/<pre>(.*)<\/pre>/Uis", $output)){
+				$output = preg_replace_callback("/<pre>(.*)<\/pre>/Uis", array(&$geshiLoader,'parse'), $output);
+			}
+			$modx->resource->set('content',$output);	
+		}		
+	break;	
+	/* Postponed until Discuss next alpha/beta/rc/pl (?) release */
+	// case 'OnDiscussPostFetchContent': 	
+		// $output = $e->params['content'];
+		
+		// if(preg_match("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", $output)){
+			// $output = preg_replace_callback("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", array(&$geshiLoader,'setLanguage'), $output);
+		// }
 		 
-		if(preg_match("/<pre>(.*)<\/pre>/Uis", $output)){
-			$output = preg_replace_callback("/<pre>(.*)<\/pre>/Uis", array(&$geshiLoader,'parse'), $output);
-		}	
+		// if(preg_match("/<pre>(.*)<\/pre>/Uis", $output)){
+			// $output = preg_replace_callback("/<pre>(.*)<\/pre>/Uis", array(&$geshiLoader,'parse'), $output);
+		// }	
 		
-		$e->_output = $output;	
-		return;		
-	break;
+		// $e->_output = $output;	
+		// return;		
+	// break;
 	default: break;	
 }
