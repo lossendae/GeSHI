@@ -26,6 +26,7 @@ class GeshiLoader {
      */
     public $config = array();
     private $_language;
+    private $_loadTheme = true;
 	
 	/**
      * The GeshiLoader constructor.
@@ -44,64 +45,50 @@ class GeshiLoader {
 			'assets_path' => $assetsPath,
 			'assets_url' => $assetsUrl,
 			
-			'enable_line_numbers' => true,
+			'enable_line_numbers' => false,
+			'theme' => 'geshi',
 		),$config);
-	}
-	
-	/**
-     * load the CSS Theme
-     *
-     * @access public
-     * @return void.
-     */
-	public function loadSettings(){
-		$theme = $this->modx->getOption('geshi.theme',null,'zenburnesque');
-		$this->modx->regClientCSS($this->config['assets_url'].'css/'.$theme.'.css');
 	}
 	
 	/**
      * Initializes GeSHI.
      *
+     * No need to escape MODx tags beforehand, they are automatically escaped by GeSHI
+     *
      * @access public
-     * @param string $content The string to highlight.
+     * @param array $content The string to highlight.
      * @return string The processed content.
      */
 	public function parse($content) 
-	{	
-		//Load the GeSHI class
+	{		
+		/* Load CSS from the plugin */
+		if($this->_loadTheme){
+			$this->modx->regClientCSS($this->config['assets_url'].'css/'. $this->config['theme'] .'.css');
+		}
+		
+		/* Load the GeSHI class */
 		if (!$this->modx->loadClass('geshi',$this->config['lib_path'],true,true)) {
 			return 'Could not load the GeSHI class.';		
 		}	
 		
 		$language = $this->_language;
 		
+		/**/
 		if(empty($language)){
 			$language = 'html4strict';			
 		}
 		
-		//Fix for html highlighting
-		if($language == 'html'){
-			$language = 'html4strict';
-		}
-		
-		//Fix some chars before parsing
 		$content = str_replace('&gt;','>', $content[1]);
 		$content = str_replace('&lt;','<', $content);		
-		$content = str_replace('[[','&#91;&#91;', $content);
-		$content = str_replace(']]','&#93;&#93;', $content);
 		
-		$geshi = new GeSHi(trim($content), $language);	
+		$geshi = new GeSHi(trim($content), $this->_language);	
 		$geshi->enable_classes();
 
 		$lineNumbers = $this->config['enable_line_numbers'];
 		$geshi->enable_line_numbers($lineNumbers);
+		$geshi->set_tab_width(2);
 		
 		$string = $geshi->parse_code();
-		
-		//Fix MODx tags after parsing
-		$string = str_replace('&amp;#91;','&#91;', $string);
-		$string = str_replace('&amp;#93;','&#93;', $string);
-		$string = str_replace('&amp;quot;','&quot;', $string);
 		
 		return $string;
 	}
@@ -119,5 +106,10 @@ class GeshiLoader {
 		$match = array(1 => $matches[2]);
 	
 		return $this->parse($match);
+	}
+	
+	public function loadTheme($value = false)
+	{
+		$this->_loadTheme = $value;
 	}
 }
