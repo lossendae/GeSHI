@@ -26,19 +26,18 @@
 $geshiLoader = $modx->getService('geshi','GeshiLoader',$modx->getOption('geshi.core_path',null,$modx->getOption('core_path').'components/geshi/').'model/geshi/',$scriptProperties);
 if (!($geshiLoader instanceof GeshiLoader)) return 'GeshiLoader controller could not be loaded';
 
-$content = $scriptProperties['highlight'];
+$content = $modx->getOption('input', $scriptProperties, $modx->getOption('highlight', $scriptProperties, '');
+$loadTheme = $modx->getOption('loadTheme', $scriptProperties, false);
 
-if(isset($scriptProperties['input']))
-{
-	$content = $scriptProperties['input'];
-}
+/* Useful when the CSS has already been loaded via the plugin */
+$geshiLoader->loadTheme($loadTheme);
 		
-if(preg_match("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", $content)){
-	$content = preg_replace_callback("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", array(&$geshiLoader,'setLanguage'), $content);
+if(preg_match("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", $output)){
+	$output = preg_replace_callback("/<pre class=\"(.*)\"\>(.*)<\/pre>/Uis", array(&$geshiLoader,'setLanguage'), $output);
 }
- 
-if(preg_match("/<pre>(.*)<\/pre>/Uis", $content)){
-	$content = preg_replace_callback("/<pre>(.*)<\/pre>/Uis", array(&$geshiLoader,'initialize'), $content);
+
+if(preg_match("/<pre>(.*)<\/pre>/Uis", $output)){
+	$output = preg_replace_callback("/<pre>(.*)<\/pre>/Uis", array(&$geshiLoader,'parse'), $output);
 }
 
 return $content;
